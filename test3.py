@@ -7,12 +7,16 @@ from PyQt5.QtGui import QPixmap
 import sys
 from PIL import Image
 
+delta = 0.005
+coor = (59.119361, 37.904043)
 
-def get_image(coor, delta):
-    lattitude, longitude = coor.split(" ")
+
+def get_image():
+    global delta, coor
+    lattitude, longitude = coor
     map_params = {
-        "ll": ",".join([longitude, lattitude]),
-        "spn": ",".join([delta, delta]),
+        "ll": ",".join([str(longitude), str(lattitude)]),
+        "spn": ",".join([str(delta), str(delta)]),
         "l": "sat"
     }
 
@@ -21,6 +25,12 @@ def get_image(coor, delta):
 
     Image.open(BytesIO(
         response.content)).save("ans.jpg")
+
+
+def set_delta(v):
+    global delta
+    delta = max(0.002, delta * v)
+    get_image()
 
 
 class Map(QtWidgets.QMainWindow):
@@ -33,7 +43,8 @@ class Map(QtWidgets.QMainWindow):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    get_image("59.119361 37.904043", "0.005")
+    set_delta(1.5)
+    get_image()
     main = Map()
     main.show()
     sys.exit(app.exec_())
