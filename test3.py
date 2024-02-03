@@ -17,14 +17,13 @@ def get_image():
     map_params = {
         "ll": ",".join([str(longitude), str(lattitude)]),
         "spn": ",".join([str(delta), str(delta)]),
-        "l": "sat"
+        "l": "sat",
     }
 
     map_api_server = "http://static-maps.yandex.ru/1.x/"
     response = requests.get(map_api_server, params=map_params)
 
-    Image.open(BytesIO(
-        response.content)).save("ans.jpg")
+    Image.open(BytesIO(response.content)).save("ans.jpg")
 
 
 def set_delta(v):
@@ -40,10 +39,38 @@ class Map(QtWidgets.QMainWindow):
         pixmap = QPixmap("ans.jpg")
         self.image.setPixmap(pixmap)
 
+    def pgup(self):
+        set_delta(0.75)
+        update()
+
+    def pgdown(self):
+        set_delta(1.5)
+        update()
+
+    def up(self):
+        self.move(-1, 0)
+        update()
+
+    def down(self):
+        self.move(1, 0)
+        update()
+
+    def left(self):
+        self.move(0, -1)
+        update()
+
+    def right(self):
+        self.move(0, 1)
+        update()
+
+    def update(self):
+        get_image()
+        pixmap = QPixmap("ans.jpg")
+        self.image.setPixmap(pixmap)
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    set_delta(1.5)
     get_image()
     main = Map()
     main.show()
