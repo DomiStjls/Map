@@ -7,28 +7,34 @@ from PyQt5.QtGui import QPixmap
 import sys
 from PIL import Image
 
-delta = 0.005
-coor = (59.119361, 37.904043)
+delta = (0.004, 0.003)
+coor = (37.904043, 59.119361)
 
 
 def get_image():
     global delta, coor
-    lattitude, longitude = coor
+    longitude, lattitude = coor
     map_params = {
         "ll": ",".join([str(longitude), str(lattitude)]),
-        "spn": ",".join([str(delta), str(delta)]),
-        "l": "sat",
+        "spn": ",".join([str(delta[0]), str(delta[1])]),
+        "l": "map",
     }
 
     map_api_server = "http://static-maps.yandex.ru/1.x/"
     response = requests.get(map_api_server, params=map_params)
 
-    Image.open(BytesIO(response.content)).save("ans.jpg")
+    Image.open(BytesIO(response.content)).save("ans.png")
 
 
 def set_delta(v):
     global delta
-    delta = max(0.002, delta * v)
+    delta = (max(0.0004, delta[0] * v), max(0.0003, delta[1] * v))
+    get_image()
+
+
+def move(x, y):
+    global coor, delta
+    coor = (coor[0] + delta[0] * x, coor[1] + delta[1] * y)
     get_image()
 
 
@@ -36,37 +42,37 @@ class Map(QtWidgets.QMainWindow):
     def __init__(self):
         super(Map, self).__init__()
         uic.loadUi("map.ui", self)
-        pixmap = QPixmap("ans.jpg")
+        pixmap = QPixmap("ans.png")
+        self.image.setPixmap(pixmap)
+
+    def update(self):
+        get_image()
+        pixmap = QPixmap("ans.png")
         self.image.setPixmap(pixmap)
 
     def pgup(self):
         set_delta(0.75)
-        update()
+        self.update()
 
     def pgdown(self):
         set_delta(1.5)
-        update()
+        self.update()
 
     def up(self):
         self.move(-1, 0)
-        update()
+        self.update()
 
     def down(self):
         self.move(1, 0)
-        update()
+        self.update()
 
     def left(self):
         self.move(0, -1)
-        update()
+        self.update()
 
     def right(self):
         self.move(0, 1)
-        update()
-
-    def update(self):
-        get_image()
-        pixmap = QPixmap("ans.jpg")
-        self.image.setPixmap(pixmap)
+        self.update()
 
 
 if __name__ == "__main__":
@@ -74,4 +80,4 @@ if __name__ == "__main__":
     get_image()
     main = Map()
     main.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
