@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import *
 import sys
 from PyQt5.QtCore import Qt
 from PIL import Image
-from q import get_image, set_delta, change, move, find, delete_mark
+from q import get_image, set_delta, change, move, find, delete_mark, take_cords
 
 
 class Map(QtWidgets.QMainWindow):
@@ -24,10 +24,14 @@ class Map(QtWidgets.QMainWindow):
         self.group.addButton(self.chb3)
         self.i.clicked.connect(self.show_index)
         print_index = False
+        self.setMouseTracking(True)
+        self.centralWidget().setMouseTracking(True)
+        self.image.setMouseTracking(True)
+        self.image.installEventFilter(self)
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(966, 487)
+        MainWindow.resize(1000, 500)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.image = QtWidgets.QLabel(self.centralwidget)
@@ -118,6 +122,13 @@ class Map(QtWidgets.QMainWindow):
         self.find.setText(_translate("MainWindow", "Найти"))
         self.sbros.setText(_translate("MainWindow", "Сброс поиска"))
 
+    def eventFilter(self, obj, event):
+        if obj == self.image and event.type() == event.MouseMove:
+            self.statusbar.showMessage(f"{event.x()}, {event.y()}")
+            # m = take_cords(event.x()/600,event.y()/450)
+            # self.statusbar.showMessage(f"{m[0]}, {m[1]}")
+        return super().eventFilter(obj, event)
+
     def show_index(self):
         print_index = self.i.isChecked()
         self.find_place()
@@ -160,6 +171,12 @@ class Map(QtWidgets.QMainWindow):
         if e.key() == Qt.Key_A:
             move(0, 1)
             self.update()
+
+    """
+    def mouseMoveEvent(self,e):
+        if e.x() < 600 and e.y() < 450:
+            self.statusbar.setStatusTip(f"{e.x()}, {e.y()}")
+            """
 
     def update(self):
         get_image()
