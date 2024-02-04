@@ -24,6 +24,7 @@ class Map(QtWidgets.QMainWindow):
         self.group.addButton(self.chb3)
         self.i.clicked.connect(self.show_index)
         print_index = False
+        change_pos = True
         self.setMouseTracking(True)
         self.centralWidget().setMouseTracking(True)
         self.image.setMouseTracking(True)
@@ -125,9 +126,16 @@ class Map(QtWidgets.QMainWindow):
     def eventFilter(self, obj, event):
         if obj == self.image and event.type() == event.MouseMove:
             self.statusbar.showMessage(f"{event.x()}, {event.y()}")
-            # m = take_cords(event.x()/600,event.y()/450)
+            # m = take_cords(event.x(),event.y())
             # self.statusbar.showMessage(f"{m[0]}, {m[1]}")
         return super().eventFilter(obj, event)
+
+    def mousePressEvent(self, e):
+        if e.button() == Qt.RightButton and (e.x() < 600 and e.y() < 450):
+            pass
+        if e.button() == Qt.LeftButton and (e.x() < 600 and e.y() < 450):
+            t = find(", ".join(take_cords(e.x(), e.y())), False)
+            self.adress.setText(t)
 
     def show_index(self):
         print_index = self.i.isChecked()
@@ -138,10 +146,10 @@ class Map(QtWidgets.QMainWindow):
         self.adress.setText("")
         delete_mark()
 
-    def find_place(self):
+    def find_place(self, change_pos=True):
         text = self.LineEdit.text()
         if text != "":
-            t = find(text, print_index)
+            t = find(text, print_index, change_pos)
         self.adress.setText(t)
 
     def change_fon(self, b):
