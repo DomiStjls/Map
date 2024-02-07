@@ -23,8 +23,8 @@ class Map(QtWidgets.QMainWindow):
         self.group.addButton(self.chb2)
         self.group.addButton(self.chb3)
         self.i.clicked.connect(self.show_index)
-        print_index = False
-        change_pos = True
+        self.print_index = False
+        self.change_pos = True
         self.setMouseTracking(True)
         self.centralWidget().setMouseTracking(True)
         self.image.setMouseTracking(True)
@@ -127,7 +127,7 @@ class Map(QtWidgets.QMainWindow):
     def eventFilter(self, obj, event):
         if obj == self.image and event.type() == event.MouseMove:
             self.statusbar.showMessage(f"{event.x()}, {event.y()}")
-            m = take_cords(event.x(), event.y())
+            m = list(take_cords(event.x(), event.y()))
             self.statusbar.showMessage(f"{m[0]}, {m[1]}")
         return super().eventFilter(obj, event)
 
@@ -135,11 +135,11 @@ class Map(QtWidgets.QMainWindow):
         if e.button() == Qt.RightButton and (e.x() < 600 and e.y() < 450):
             pass
         if e.button() == Qt.LeftButton and (e.x() < 600 and e.y() < 450):
-            t = find(", ".join(take_cords(e.x(), e.y())), False)
+            t = find(", ".join(take_cords(e.x(), e.y())), change_pos)
             self.adress.setText(t)
 
     def show_index(self):
-        print_index = self.i.isChecked()
+        self.print_index = self.i.isChecked()
         self.find_place()
 
     def delete_res(self):
@@ -150,8 +150,8 @@ class Map(QtWidgets.QMainWindow):
     def find_place(self, change_pos=True):
         text = self.LineEdit.text()
         if text != "":
-            t = find(text, print_index, change_pos)
-        self.adress.setText(t)
+            t = find(text, self.print_index, change_pos)
+            self.adress.setText(t)
 
     def change_fon(self, b):
         for button in self.group.buttons():
@@ -159,6 +159,7 @@ class Map(QtWidgets.QMainWindow):
                 button.setChecked(False)
         # print(self.chbs.index(b) + 1)
         change(self.chbs.index(b) + 1)
+        self.find_place()
 
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_PageUp:
@@ -171,13 +172,13 @@ class Map(QtWidgets.QMainWindow):
             move(-1, 0)
             self.update()
         if e.key() == Qt.Key_W:
-            move(1, 0)
+            move(0, 1)
             self.update()
         if e.key() == Qt.Key_S:
-            move(-1, 0)
+            move(0, -1)
             self.update()
         if e.key() == Qt.Key_D:
-            move(0, 1)
+            move(1, 0)
             self.update()
         if e.key() == Qt.Key_A:
             move(-1, 0)
