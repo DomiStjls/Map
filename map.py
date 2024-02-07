@@ -120,14 +120,15 @@ class Map(QtWidgets.QMainWindow):
         self.chb3.setText(_translate("MainWindow", "схема"))
         self.chb2.setText(_translate("MainWindow", "гибрид"))
         self.chb1.setText(_translate("MainWindow", "спутник"))
+        self.chbs = [self.chb3, self.chb2, self.chb1]
         self.find.setText(_translate("MainWindow", "Найти"))
         self.sbros.setText(_translate("MainWindow", "Сброс поиска"))
 
     def eventFilter(self, obj, event):
         if obj == self.image and event.type() == event.MouseMove:
             self.statusbar.showMessage(f"{event.x()}, {event.y()}")
-            # m = take_cords(event.x(),event.y())
-            # self.statusbar.showMessage(f"{m[0]}, {m[1]}")
+            m = take_cords(event.x(), event.y())
+            self.statusbar.showMessage(f"{m[0]}, {m[1]}")
         return super().eventFilter(obj, event)
 
     def mousePressEvent(self, e):
@@ -156,6 +157,8 @@ class Map(QtWidgets.QMainWindow):
         for button in self.group.buttons():
             if button is not b:
                 button.setChecked(False)
+        # print(self.chbs.index(b) + 1)
+        change(self.chbs.index(b) + 1)
 
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_PageUp:
@@ -171,13 +174,13 @@ class Map(QtWidgets.QMainWindow):
             move(1, 0)
             self.update()
         if e.key() == Qt.Key_S:
-            move(0, -1)
+            move(-1, 0)
             self.update()
         if e.key() == Qt.Key_D:
             move(0, 1)
             self.update()
         if e.key() == Qt.Key_A:
-            move(0, 1)
+            move(-1, 0)
             self.update()
 
     """
