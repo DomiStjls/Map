@@ -135,7 +135,7 @@ class Map(QtWidgets.QMainWindow):
         if e.button() == Qt.RightButton and (e.x() < 600 and e.y() < 450):
             pass
         if e.button() == Qt.LeftButton and (e.x() < 600 and e.y() < 450):
-            t = find(", ".join(take_cords(e.x(), e.y())), change_pos)
+            t = find(", ".join(take_cords(e.x(), e.y())), self.change_pos)
             self.adress.setText(t)
 
     def show_index(self):
@@ -152,6 +152,7 @@ class Map(QtWidgets.QMainWindow):
         if text != "":
             t = find(text, self.print_index, change_pos)
             self.adress.setText(t)
+            self.update()
 
     def change_fon(self, b):
         for button in self.group.buttons():

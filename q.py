@@ -6,16 +6,19 @@ from PIL import Image
 delta = (0.004, 0.003)
 coor = (37.904043, 59.119361)
 mode = "sat"
+pt = None
 
 
 def get_image():
-    global delta, coor, mode
+    global delta, coor, mode, pt
     longitude, lattitude = coor
     map_params = {
         "ll": ",".join([str(longitude), str(lattitude)]),
         "spn": ",".join([str(delta[0]), str(delta[1])]),
         "l": mode,
     }
+    if pt is not None:
+        map_params["pt"] = pt
     map_api_server = "http://static-maps.yandex.ru/1.x/"
     response = requests.get(map_api_server, params=map_params)
 
@@ -45,18 +48,25 @@ def change(*args):
 
 
 def find(*args):
+    global coor, pt
     # поиск места + метка, которая сохраняется + должна возвращать полный адрес найдекного места + подается адрес и true/false надо ли искать индекс(если true надо)
-    text, ind = args
+    text, *other = args
     server = "https://search-maps.yandex.ru/v1/"
     search_params = {
         "apikey": "dda3ddba-c9ea-4ead-9010-f43fbc15c6e3",
         "text": text,
         "lang": "ru_RU",
         "type": "biz",
-        "ll": map(str, )
+        "ll": f"{coor[0]},{coor[1]}"
     }
     responce = requests.get(server, params=search_params)
-    print(responce.json())
+    json = responce.json()
+    ans = json["features"][0]["properties"]["name"]
+    print(coor)
+    coor = tuple(json["features"][0]["geometry"]["coordinates"])
+    print(coor)
+    pt = f"{coor[0]},{coor[1]},org"
+    return ans
 
 
 def delete_mark():
@@ -68,7 +78,6 @@ def take_cords(*args):
     global coor
     # по координатам в карте найти координаты на местности + True/False надо ли менять карту или просто отметить на существующей
     x, y = args
-    x = x / 600 * delta[0] + coor[0]
-    y = y / 450 * delta[1] + coor[1]
+    x = (-300 + x / 600) * delta[0] + coor[0]
+    y = (225 - y / 450) * delta[1] + coor[1]
     return map(str, (y, x))
-    pass
