@@ -51,7 +51,7 @@ def change(*args):
 def find(*args):
     global coor, pt
     # поиск места + метка, которая сохраняется + должна возвращать полный адрес найдекного места + подается адрес и true/false надо ли искать индекс(если true надо)
-    text, *other = args
+    text, ind, *q = args
     server = "https://search-maps.yandex.ru/v1/"
     search_params = {
         "apikey": "dda3ddba-c9ea-4ead-9010-f43fbc15c6e3",
@@ -60,11 +60,15 @@ def find(*args):
         "type": "biz",
         "ll": f"{coor[0]},{coor[1]}"
     }
-    responce = requests.get(server, params=search_params)
-    json = responce.json()
+    response = requests.get(server, params=search_params)
+    json = response.json()
     ans = json["features"][0]["properties"]["description"]
     coor = tuple(json["features"][0]["geometry"]["coordinates"])
     pt = f"{coor[0]},{coor[1]},org"
+    if ind:
+        respone = requests.get(
+            f"http://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-98ba-98533de7710b&geocode={pt[::-4]}&format=json")
+        ans += " index"
     return ans
 
 

@@ -135,7 +135,7 @@ class Map(QtWidgets.QMainWindow):
         if e.button() == Qt.RightButton and (e.x() < 600 and e.y() < 450):
             pass
         if e.button() == Qt.LeftButton and (e.x() < 600 and e.y() < 450):
-            t = find(", ".join(take_cords(e.x(), e.y())), self.change_pos)
+            t = find(", ".join(take_cords(e.x(), e.y())), self.print_index, self.change_pos)
             self.adress.setText(t)
             self.update()
 
