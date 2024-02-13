@@ -137,6 +137,7 @@ class Map(QtWidgets.QMainWindow):
         if e.button() == Qt.LeftButton and (e.x() < 600 and e.y() < 450):
             t = find(", ".join(take_cords(e.x(), e.y())), self.change_pos)
             self.adress.setText(t)
+            self.update()
 
     def show_index(self):
         self.print_index = self.i.isChecked()
@@ -146,6 +147,7 @@ class Map(QtWidgets.QMainWindow):
         self.LineEdit.setText("")
         self.adress.setText("")
         delete_mark()
+        self.update()
 
     def find_place(self, change_pos=True):
         text = self.LineEdit.text()

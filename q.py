@@ -62,7 +62,7 @@ def find(*args):
     }
     responce = requests.get(server, params=search_params)
     json = responce.json()
-    ans = json["features"][0]["properties"]["name"]
+    ans = json["features"][0]["properties"]["description"]
     coor = tuple(json["features"][0]["geometry"]["coordinates"])
     pt = f"{coor[0]},{coor[1]},org"
     return ans
@@ -70,7 +70,8 @@ def find(*args):
 
 def delete_mark():
     # не очень понима., что должна делать функция, но по идее убирать последнюю метку
-    pass
+    global pt
+    pt = None
 
 
 def take_cords(*args):
