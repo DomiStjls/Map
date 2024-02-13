@@ -22,7 +22,7 @@ def get_image():
     map_api_server = "http://static-maps.yandex.ru/1.x/"
     response = requests.get(map_api_server, params=map_params)
 
-    Image.open(BytesIO(response.content)).save("ans.jpg")
+    Image.open(BytesIO(response.content)).save("ans.png")
 
 
 def set_delta(v):
@@ -38,13 +38,14 @@ def move(h, v):
 
 
 def change(*args):
+    global mode
     # смена вида карты схема=1\спутник=2\гибрид=3
     if args[0] == 1:
         mode = "map"
     elif args[0] == 2:
-        mode = "sat"
-    else:
         mode = "skl"
+    else:
+        mode = "sat"
 
 
 def find(*args):
@@ -62,9 +63,7 @@ def find(*args):
     responce = requests.get(server, params=search_params)
     json = responce.json()
     ans = json["features"][0]["properties"]["name"]
-    print(coor)
     coor = tuple(json["features"][0]["geometry"]["coordinates"])
-    print(coor)
     pt = f"{coor[0]},{coor[1]},org"
     return ans
 

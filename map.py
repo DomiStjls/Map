@@ -161,6 +161,7 @@ class Map(QtWidgets.QMainWindow):
         # print(self.chbs.index(b) + 1)
         change(self.chbs.index(b) + 1)
         self.find_place()
+        self.update()
 
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_PageUp:
@@ -193,7 +194,7 @@ class Map(QtWidgets.QMainWindow):
 
     def update(self):
         get_image()
-        pixmap = QPixmap("ans.jpg")
+        pixmap = QPixmap("ans.png")
         self.image.setPixmap(pixmap)
 
 
