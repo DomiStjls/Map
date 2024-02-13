@@ -15,7 +15,7 @@ class Map(QtWidgets.QMainWindow):
         super(Map, self).__init__()
 
         self.setupUi(self)
-        pixmap = QPixmap("ans.jpg")
+        pixmap = QPixmap("ans.png")
         self.image.setPixmap(pixmap)
         self.group = QButtonGroup()
         self.group.buttonClicked.connect(self.change_fon)
