@@ -173,8 +173,18 @@ class Map(QtWidgets.QMainWindow):
             set_delta(1.5)
             self.update()
         if e.key() == Qt.Key_Down:
+            move(0, -1)
+            self.update()
+        if e.key() == Qt.Key_Up:
+            move(0, 1)
+            self.update()
+        if e.key() == Qt.Key_Left:
             move(-1, 0)
             self.update()
+        if e.key() == Qt.Key_Right:
+            move(1, 0)
+            self.update()
+        """
         if e.key() == Qt.Key_W:
             move(0, 1)
             self.update()
@@ -187,6 +197,7 @@ class Map(QtWidgets.QMainWindow):
         if e.key() == Qt.Key_A:
             move(-1, 0)
             self.update()
+            """
 
     """
     def mouseMoveEvent(self,e):
