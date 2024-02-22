@@ -2,7 +2,7 @@ from io import BytesIO
 
 import requests
 from PyQt5 import QtWidgets, uic, QtCore
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QCursor
 from PyQt5.QtWidgets import *
 import sys
 from PyQt5.QtCore import Qt
@@ -212,7 +212,11 @@ class Map(QtWidgets.QMainWindow):
         self.find.setEnabled(False)
         self.sbros.setEnabled(False)
         self.i.setEnabled(False)
+        # QCursor().setShape(Qt.BusyCursor)
+        QApplication.setOverrideCursor(Qt.BusyCursor)
         get_image()
+        QApplication.setOverrideCursor(Qt.ArrowCursor)
+        # QCursor().setShape(Qt.ArrowCursor)
         self.chb1.setEnabled(True)
         self.chb2.setEnabled(True)
         self.chb3.setEnabled(True)
