@@ -206,7 +206,19 @@ class Map(QtWidgets.QMainWindow):
             """
 
     def update(self):
+        self.chb1.setEnabled(False)
+        self.chb2.setEnabled(False)
+        self.chb3.setEnabled(False)
+        self.find.setEnabled(False)
+        self.sbros.setEnabled(False)
+        self.i.setEnabled(False)
         get_image()
+        self.chb1.setEnabled(True)
+        self.chb2.setEnabled(True)
+        self.chb3.setEnabled(True)
+        self.find.setEnabled(True)
+        self.sbros.setEnabled(True)
+        self.i.setEnabled(True)
         pixmap = QPixmap("ans.png")
         self.image.setPixmap(pixmap)
 
